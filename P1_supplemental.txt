@@ -1,17 +1,27 @@
 Answer questions marked as "QS"
+Group members: Yuki Zheng, Jishan Rahman
 
-QS1.1:
+QS1.1: For DFS, we use a stack data structure. A stack follows a Last In, First Out (LIFO) order, meaning the most recently discovered node is expanded first.
+ In DFS, we explore as far as possible along a branch before backtracking, which ensures deep exploration before moving to sibling nodes. 
+ This structure is ideal for DFS because it naturally handles recursion and backtracking.
 
+QS1.2: Pacman does not go through all the nodes expanded on his way to the goal. Which is something I did not expect, I expected seeing it go through each branch but in use it showed where it had expanded by the red hue on the board then went along the correct path.
+ This happens because DFS explores the deepest parts of each branch first and may explore unnecessary paths before finding the goal. 
+ Once the goal is found, Pacman follows the final discovered path directly, ignoring previously explored nodes because they were considered but found to be incorrect.
 
-QS1.2:
+QS2.1: For BFS we use a queue data structure. A queue follows a First In First Out (FIFO) order, this is used to keep track of explored nodes level by level. Then once one level is fully explored, we move on to the next level down the tree. 
+ With a queue our pacman ensures that we go level by level because it ensures that we visit all the nodes at the current level before moving on to the next level deeper level of the tree.
 
-
-QS2.1:
-
-
-QS3.1:
-
-
+QS3.1: The cost function we made prioritizes paths based on the total accumulated cost from the start state. 
+ To do this we maintain a priority queue that expands the node with the lowest total path cost first. To store those cheapest known paths we used a dictionary "ucs_visited = {}"
+ If we encounter a node we already visited with a lower cost then before then we update the cost and reprocess it. 
+ The factors we considered were:
+ - Step cost: By the successor function we used the cost of moving to a new node
+ - Cumulative cost: Tracks the total cost to reach a node from the start node
+ - Priority Queue Ordering: We used a priority queue to order the nodes by their cumulative cost, so we always expand the node with the lowest cumulative cost first
+The weight considerations we took were:
+ - Every step cost needed to be treated equally: This is because we are trying to find the shortest path and every step is equally important
+ - No hueristics being used: UCS expands a lot more nodes compared to A*, but UCS still finds an optimal solution everytime
 
 QS4.1:
 
