@@ -86,13 +86,62 @@ def depthFirstSearch(problem: SearchProblem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    if(problem.isGoalState(problem.getStartState())): 
+        return []
+    
+    dfs_stack = util.Stack() 
+    dfs_stack.push((problem.getStartState(), []))
+    dfs_visited = set()
+
+    while not dfs_stack.isEmpty():    
+        current_node, path_taken = dfs_stack.pop()
+
+        if current_node in dfs_visited: 
+            continue 
+
+        dfs_visited.add(current_node)
+
+        if problem.isGoalState(current_node): 
+            return path_taken
+        
+        # we denote the third parameter 'stepCost' as "_" due to irrelevance
+        for successor, action, _ in problem.getSuccessors(current_node):
+
+            # unvitisted child nodes pushed onto the stack so they can be visited later 
+            if successor not in dfs_visited:
+                dfs_stack.push((successor, path_taken + [action]))
+
+    return []
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    if(problem.isGoalState(problem.getStartState())):
+        return []
+    
+    bfs_queue = util.Queue()
+    bfs_queue.push((problem.getStartState(), []))
+    bfs_visited = set()
+
+    while not bfs_queue.isEmpty(): 
+        current_node, path_taken = bfs_queue.pop()
+
+        if current_node in bfs_visited: 
+            continue 
+
+        bfs_visited.add(current_node)
+
+        if problem.isGoalState(current_node): 
+            return path_taken
+        
+        # we denote the third parameter 'stepCost' as "_" due to irrelevance
+        for successor, action, _ in problem.getSuccessors(current_node):
+
+            # unvitisted child nodes pushed onto the stack so they can be visited later 
+            if successor not in bfs_visited:
+                bfs_queue.push((successor, path_taken + [action]))
+    return []
 
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
