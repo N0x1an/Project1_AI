@@ -301,11 +301,11 @@ class CornersProblem(search.SearchProblem):
     def isGoalState(self, state: Any):
         """
         Returns whether this search state is a goal state of the problem.
-		
-																							
-																						   
-																						  
-																 
+  
+					   
+						 
+						
+				 
         """
         "*** YOUR CODE HERE ***"
         position, visited = state # Unpack the state to get the position and visited corners
@@ -333,6 +333,19 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
+            directionX, directionY = Actions.directionToVector(action)
+            nextX, nextY = int(currentPosition[0] + directionX), int(currentPosition[1] + directionY)
+            
+            # Move to valid position
+            if (not self.walls[nextX][nextY]):
+                nextPosition = (nextX, nextY)
+                nextVisitedCorners = visitedCorners
+                
+                # if pacman found a corner, add it to visited corners
+                if (nextPosition in self.corners and nextPosition not in visitedCorners):
+                    nextVisitedCorners = visitedCorners + (nextPosition,) # Adding the corner to visited corners
+                    
+                successors.append(((nextPosition, nextVisitedCorners), action, 1)) # Add the successor to the list of successors
             directionX, directionY = Actions.directionToVector(action)
             nextX, nextY = int(currentPosition[0] + directionX), int(currentPosition[1] + directionY)
             
@@ -380,6 +393,30 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
+    # Get pacman current location and unvisited corners
+    position, corners_visited = state
+    unvisited = [corner for corner in problem.corners if corner not in corners_visited]
+    
+    # If all corners are visited, return 0
+    if not unvisited:
+        return 0
+    
+    # Get the closest corner to the current position
+    nearest = min(unvisited, key = lambda c: util.manhattanDistance(position, c))
+    min_distance = util.manhattanDistance(position, nearest)
+    
+    # Approximate shortest possible path
+    remaining_distance = 0
+    current_position = nearest
+    unvisited.remove(nearest)
+    
+    while unvisited:
+        next_corner = min(unvisited, key = lambda c: util.manhattanDistance(current_position, c))
+        remaining_distance += util.manhattanDistance(current_position, next_corner)
+        current_position = next_corner
+        unvisited.remove(next_corner)
+        
+    return min_distance + remaining_distance
     # Get pacman current location and unvisited corners
     position, corners_visited = state
     unvisited = [corner for corner in problem.corners if corner not in corners_visited]

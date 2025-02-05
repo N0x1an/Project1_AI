@@ -36,7 +36,21 @@ QS5.1:
 QS5.2:
 
 
-QS6.1:
+QS6.1: We used a hueristic that estimated the minimum cost to visit each remaining unvisited corner in CornersProblem. The way we made it work was by finding the nearest unvisited corner from Pacman's current location
+ using the Manhattan distance. We then added the cost of reaching that corner to the cost of reaching the current corner.
+ We approximated the shortest possible path to visit all the unvisted corners with a greedy approach, always choosing the closest unvisited corner to visit next
+ The last factor of our hueristic value was the sum of the Manhattan distance to the nearest corner and the estimated travel cost to visit all other unvisited corners.
 
+ The Pros and Cons of our chosen hueristic are:
+ Pros: 
+  - It is admissable, the hueristic never overestimates the cost to reach the goal
+  - It is consistent, the hueristic always returns the same value for the same state
+  - It is efficient, there is a reduction in the number of expanded nodes in this hueristic compared to UCS
+  Cons:
+  - It is not optimal for complex mazes, the hueristic may not always find the shortest path to the goal but does not compute the exact optimal order to visit the remaining corners
+  - It has potential for performance variations, this is because the hueristic is greedy and may not always choose the best next corner to visit and if the corners are placed in difficult to reach layout there may be more expanded nodes than optimal
+
+Our hueristic is consistent because when moving from one state to anoter there is never a decrease in the hueristic by more than the cost of the move, if our Pacman moved 1 square closer to a corner then the hueristic
+would decrease by at most 1, which matches the move cost. If there is a state where there is no unvisted corners then the hueristic is 0, which maintains consistency.
 
 QS7.1:
