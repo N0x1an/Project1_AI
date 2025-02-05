@@ -23,10 +23,14 @@ The weight considerations we took were:
  - Every step cost needed to be treated equally: This is because we are trying to find the shortest path and every step is equally important
  - No hueristics being used: UCS expands a lot more nodes compared to A*, but UCS still finds an optimal solution everytime
 
-QS4.1:
+QS4.1: difference bewteen nullHueristic and Manhattan distance hueristic is that nullHueristic is a function that always returns 0, which means its not giving any information about the distance to the goal or any guidance to it.
+ Manhattan distance hueristic calculates the absolute difference in the x and y coordinates between the current state and goal.
+ This means that it is giving information about the distance to the goal and is guiding the search towards it by finding the shortest path in the grid environment
+ nullHueristic does give the optimal solution but it is not efficient because it expands a lot of nodes before finding the goal. Like A* it is very costly and slower but its not improving the efficiency of the searching.
 
+Q4.2 is in the assignment details but we are told to only answer QS questions.
 
-QS5.1:
+QS5.1: 
 
 
 QS5.2:
