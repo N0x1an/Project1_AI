@@ -138,7 +138,7 @@ def breadthFirstSearch(problem: SearchProblem):
         # we denote the third parameter 'stepCost' as "_" due to irrelevance
         for successor, action, _ in problem.getSuccessors(current_node):
 
-            # unvitisted child nodes pushed onto the stack so they can be visited later 
+            # unvitisted child nodes pushed onto the queue so they can be visited later 
             if successor not in bfs_visited:
                 bfs_queue.push((successor, path_taken + [action]))
     return []
