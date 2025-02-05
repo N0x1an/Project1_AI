@@ -1,4 +1,5 @@
 Answer questions marked as "QS"
+Group Number: 46 
 Group members: Yuki Zheng, Jishan Rahman
 
 QS1.1: For DFS, we use a stack data structure. A stack follows a Last In, First Out (LIFO) order, meaning the most recently discovered node is expanded first.
@@ -54,3 +55,9 @@ Our hueristic is consistent because when moving from one state to anoter there i
 would decrease by at most 1, which matches the move cost. If there is a state where there is no unvisted corners then the hueristic is 0, which maintains consistency.
 
 QS7.1:
+
+
+QS8.1: Our approach completes the isGoalState() in the AnyFoodSearchProblem class by converting the food grid into a list. 
+We've determined the goal for this problem domain to be that the pacman is on a state that has food. Then, a conditional was set 
+such that a goal state is one where food is present. 
+For findPathToClosestDot(), the instance of AnyFoodSearchProblem is created and then used as a parameter for breadthFirstSearch(). 
