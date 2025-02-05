@@ -1,4 +1,5 @@
 Answer questions marked as "QS"
+Group Number: 46 
 Group members: Yuki Zheng, Jishan Rahman
 
 QS1.1: For DFS, we use a stack data structure. A stack follows a Last In, First Out (LIFO) order, meaning the most recently discovered node is expanded first.
