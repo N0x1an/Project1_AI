@@ -497,7 +497,21 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    food_list = foodGrid.asList() # Converting the food grid to a list of food coordinates
+    
+    # If there is no food left, return 0
+    if (not food_list):
+        return 0
+    
+    # Get distance of food that is the farthest from Pacman
+    max_distance = max(mazeDistance(position, food, problem.startingGameState) for food in food_list)
+    
+    # Finding the sum of minimum tree span of food 
+    remaining_food_distance = [util.manhattanDistance(food1, food2) for i, food1 in enumerate(food_list) for food2 in food_list[i + 1 :]]
+    approximation = sum(sorted(remaining_food_distance)[: len(food_list) - 1]) if (food_list) else 0
+    
+    # return the sum of the maximum distance and the minimum tree span
+    return max_distance + approximation
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
