@@ -23,16 +23,34 @@ The weight considerations we took were:
  - Every step cost needed to be treated equally: This is because we are trying to find the shortest path and every step is equally important
  - No hueristics being used: UCS expands a lot more nodes compared to A*, but UCS still finds an optimal solution everytime
 
-QS4.1:
+QS4.1: difference bewteen nullHueristic and Manhattan distance hueristic is that nullHueristic is a function that always returns 0, which means its not giving any information about the distance to the goal or any guidance to it.
+ Manhattan distance hueristic calculates the absolute difference in the x and y coordinates between the current state and goal.
+ This means that it is giving information about the distance to the goal and is guiding the search towards it by finding the shortest path in the grid environment
+ nullHueristic does give the optimal solution but it is not efficient because it expands a lot of nodes before finding the goal. Like A* it is very costly and slower but its not improving the efficiency of the searching.
 
+Q4.2 is in the assignment details but we are told to only answer QS questions.
 
-QS5.1:
+QS5.1: 
 
 
 QS5.2:
 
 
-QS6.1:
+QS6.1: We used a hueristic that estimated the minimum cost to visit each remaining unvisited corner in CornersProblem. The way we made it work was by finding the nearest unvisited corner from Pacman's current location
+ using the Manhattan distance. We then added the cost of reaching that corner to the cost of reaching the current corner.
+ We approximated the shortest possible path to visit all the unvisted corners with a greedy approach, always choosing the closest unvisited corner to visit next
+ The last factor of our hueristic value was the sum of the Manhattan distance to the nearest corner and the estimated travel cost to visit all other unvisited corners.
 
+ The Pros and Cons of our chosen hueristic are:
+ Pros: 
+  - It is admissable, the hueristic never overestimates the cost to reach the goal
+  - It is consistent, the hueristic always returns the same value for the same state
+  - It is efficient, there is a reduction in the number of expanded nodes in this hueristic compared to UCS
+  Cons:
+  - It is not optimal for complex mazes, the hueristic may not always find the shortest path to the goal but does not compute the exact optimal order to visit the remaining corners
+  - It has potential for performance variations, this is because the hueristic is greedy and may not always choose the best next corner to visit and if the corners are placed in difficult to reach layout there may be more expanded nodes than optimal
+
+Our hueristic is consistent because when moving from one state to anoter there is never a decrease in the hueristic by more than the cost of the move, if our Pacman moved 1 square closer to a corner then the hueristic
+would decrease by at most 1, which matches the move cost. If there is a state where there is no unvisted corners then the hueristic is 0, which maintains consistency.
 
 QS7.1:

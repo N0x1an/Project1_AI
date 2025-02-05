@@ -295,8 +295,8 @@ class CornersProblem(search.SearchProblem):
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        return (self.startingPosition, ()) 
-
+        "*** YOUR CODE HERE ***"
+        return (self.startingPosition, ())
 
     def isGoalState(self, state: Any):
         """
@@ -307,10 +307,10 @@ class CornersProblem(search.SearchProblem):
         The first parameter denoted by "_" is the state position and is irrelavant here.  
         The all() returns True if all corners have been visited" 
         """
-        (_, corners_visited) = state 
-        return all(corners_visited)
-
-
+        "*** YOUR CODE HERE ***"
+        position, visited = state # Unpack the state to get the position and visited corners
+        return len(visited) == 4 # All corners are visited
+     
     def getSuccessors(self, state: Any):
         """
         Returns successor states, the actions they require, and a cost of 1.
@@ -323,6 +323,7 @@ class CornersProblem(search.SearchProblem):
         """
 
         successors = []
+        currentPosition, visitedCorners = state # Unpack the state to get the position and visited corners
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
@@ -332,9 +333,19 @@ class CornersProblem(search.SearchProblem):
             hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
-            if not hitsWall: 
-                successors.append(((nextx, nexty), action, 1))
-
+            directionX, directionY = Actions.directionToVector(action)
+            nextX, nextY = int(currentPosition[0] + directionX), int(currentPosition[1] + directionY)
+            
+            # Move to valid position
+            if (not self.walls[nextX][nextY]):
+                nextPosition = (nextX, nextY)
+                nextVisitedCorners = visitedCorners
+                
+                # if pacman found a corner, add it to visited corners
+                if (nextPosition in self.corners and nextPosition not in visitedCorners):
+                    nextVisitedCorners = visitedCorners + (nextPosition,) # Adding the corner to visited corners
+                    
+                successors.append(((nextPosition, nextVisitedCorners), action, 1)) # Add the successor to the list of successors
         self._expanded += 1 # DO NOT CHANGE
         return successors
 
@@ -369,30 +380,30 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    #  LOGIC 
-    #make a set of all corners that havent been visited 
-    #find the heuristic value of unvisited corners using manhattan distance 
-    #check that the path is legal (doesn't hit a wall)
-    #add that corner to the visited corner set 
-
-    (state_position, corners_visited) = state 
-    corners_not_visited = set() 
-
-    for corner in corners:
-        if not (corner in corners_visited): 
-            corners_not_visited.add(corner)
-
-    if len(corners_not_visited) == 0: return 0 
-
-    heuristic = []
-
-    heuristic=[0]
-    for corner in corners_not_visited:
-        heuristic.append(util.manhattanDistance(state_position,corner))
-    return max(heuristic)
-
+    # Get pacman current location and unvisited corners
+    position, corners_visited = state
+    unvisited = [corner for corner in problem.corners if corner not in corners_visited]
+    
+    # If all corners are visited, return 0
+    if not unvisited:
+        return 0
+    
+    # Get the closest corner to the current position
+    nearest = min(unvisited, key = lambda c: util.manhattanDistance(position, c))
+    min_distance = util.manhattanDistance(position, nearest)
+    
+    # Approximate shortest possible path
+    remaining_distance = 0
+    current_position = nearest
+    unvisited.remove(nearest)
+    
+    while unvisited:
+        next_corner = min(unvisited, key = lambda c: util.manhattanDistance(current_position, c))
+        remaining_distance += util.manhattanDistance(current_position, next_corner)
+        current_position = next_corner
+        unvisited.remove(next_corner)
         
-
+    return min_distance + remaining_distance
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
