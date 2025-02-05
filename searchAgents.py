@@ -296,15 +296,16 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return (self.startingPosition, ())
 
     def isGoalState(self, state: Any):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
-
+        position, visited = state # Unpack the state to get the position and visited corners
+        return len(visited) == 4 # All corners are visited
+     
     def getSuccessors(self, state: Any):
         """
         Returns successor states, the actions they require, and a cost of 1.
@@ -317,6 +318,7 @@ class CornersProblem(search.SearchProblem):
         """
 
         successors = []
+        currentPosition, visitedCorners = state # Unpack the state to get the position and visited corners
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
@@ -326,7 +328,19 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
-
+            directionX, directionY = Actions.directionToVector(action)
+            nextX, nextY = int(currentPosition[0] + directionX), int(currentPosition[1] + directionY)
+            
+            # Move to valid position
+            if (not self.walls[nextX][nextY]):
+                nextPosition = (nextX, nextY)
+                nextVisitedCorners = visitedCorners
+                
+                # if pacman found a corner, add it to visited corners
+                if (nextPosition in self.corners and nextPosition not in visitedCorners):
+                    nextVisitedCorners = visitedCorners + (nextPosition,) # Adding the corner to visited corners
+                    
+                successors.append(((nextPosition, nextVisitedCorners), action, 1)) # Add the successor to the list of successors
         self._expanded += 1 # DO NOT CHANGE
         return successors
 
@@ -361,7 +375,30 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    # Get pacman current location and unvisited corners
+    position, corners_visited = state
+    unvisited = [corner for corner in problem.corners if corner not in corners_visited]
+    
+    # If all corners are visited, return 0
+    if not unvisited:
+        return 0
+    
+    # Get the closest corner to the current position
+    nearest = min(unvisited, key = lambda c: util.manhattanDistance(position, c))
+    min_distance = util.manhattanDistance(position, nearest)
+    
+    # Approximate shortest possible path
+    remaining_distance = 0
+    current_position = nearest
+    unvisited.remove(nearest)
+    
+    while unvisited:
+        next_corner = min(unvisited, key = lambda c: util.manhattanDistance(current_position, c))
+        remaining_distance += util.manhattanDistance(current_position, next_corner)
+        current_position = next_corner
+        unvisited.remove(next_corner)
+        
+    return min_distance + remaining_distance
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -455,7 +492,21 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    food_list = foodGrid.asList() # Converting the food grid to a list of food coordinates
+    
+    # If there is no food left, return 0
+    if (not food_list):
+        return 0
+    
+    # Get distance of food that is the farthest from Pacman
+    max_distance = max(mazeDistance(position, food, problem.startingGameState) for food in food_list)
+    
+    # Finding the sum of minimum tree span of food 
+    remaining_food_distance = [util.manhattanDistance(food1, food2) for i, food1 in enumerate(food_list) for food2 in food_list[i + 1 :]]
+    approximation = sum(sorted(remaining_food_distance)[: len(food_list) - 1]) if (food_list) else 0
+    
+    # return the sum of the maximum distance and the minimum tree span
+    return max_distance + approximation
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
