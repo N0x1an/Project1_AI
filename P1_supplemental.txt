@@ -30,11 +30,14 @@ QS4.1: difference bewteen nullHueristic and Manhattan distance hueristic is that
 
 Q4.2 is in the assignment details but we are told to only answer QS questions.
 
-QS5.1: 
+QS5.1: The state representation we chose was a tuple that contained the current state's current position and another tuple in the next index that contains all the visited corners. 
+This is important because we need a way to determine the statuses of the corners to have reached our goal state (all corners have been visited). 
+Therefore, the status of a state is not only its position but also a current update on the corners. 
 
-
-QS5.2:
-
+QS5.2: As mentioned in the previous question, our strategy was defining the goal state to ensure that all corners have been visited.
+In addition, in getSuccessors(), we set a condition to ensure that a new position does not crash into the wall. When adding a new successor, 
+the parameters were (successor, action, cost=1). The successor would be the aforementioned tuple that contains the current state's position and the most up-to-date 
+status of the visited corners. The corresponding action and cost of 1 are then added as well. 
 
 QS6.1: We used a hueristic that estimated the minimum cost to visit each remaining unvisited corner in CornersProblem. The way we made it work was by finding the nearest unvisited corner from Pacman's current location
  using the Manhattan distance. We then added the cost of reaching that corner to the cost of reaching the current corner.
@@ -53,4 +56,18 @@ QS6.1: We used a hueristic that estimated the minimum cost to visit each remaini
 Our hueristic is consistent because when moving from one state to anoter there is never a decrease in the hueristic by more than the cost of the move, if our Pacman moved 1 square closer to a corner then the hueristic
 would decrease by at most 1, which matches the move cost. If there is a state where there is no unvisted corners then the hueristic is 0, which maintains consistency.
 
-QS7.1:
+QS7.1: The hueristic used was based on the mazeDistance() fucntion which gave us the farthest remaining food pellet, it estimated the remaining cost by computing the true shortest path to the most distant food pellet.
+ Pros: 
+  - It is admissable, mazeDistance provides the shortest path and this hueristic never overestimates the cost
+  - It is consistent, moving towards a food pellet reduces h(n) by at most the step cost which ensures consistency
+  - It is efficient, the hueristic reduces the number of expanded nodes in this hueristic compared to UCS
+  Cons:
+  - When there is limited food pellets left, the hueristic may not be as efficient as it is when there is a lot. The hueristic considers the farthest food so it may underestimate when multiple distant food pellets remain.
+  - mazeDistance() is costly to run, this function has a large computational cost because it runs BFS which makes it very slow for larger mazes.
+
+ It is consistent because each movement towards a food pellet never reduces h(n) more than the step cost and with the A* search  we ensure the shortest path while considering the hueristic estimate.
+
+QS8.1: Our approach completes the isGoalState() in the AnyFoodSearchProblem class by converting the food grid into a list. 
+We've determined the goal for this problem domain to be that the pacman is on a state that has food. Then, a conditional was set 
+such that a goal state is one where food is present. 
+For findPathToClosestDot(), the instance of AnyFoodSearchProblem is created and then used as a parameter for breadthFirstSearch(). 
