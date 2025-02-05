@@ -31,10 +31,14 @@ QS4.1: difference bewteen nullHueristic and Manhattan distance hueristic is that
 
 Q4.2 is in the assignment details but we are told to only answer QS questions.
 
-QS5.1: 
+QS5.1: The state representation we chose was a tuple that contained the current state's current position and another tuple in the next index that contains all the visited corners. 
+This is important because we need a way to determine the statuses of the corners to have reached our goal state (all corners have been visited). 
+Therefore, the status of a state is not only its position but also a current update on the corners. 
 
-
-QS5.2:
+QS5.2: As mentioned in the previous question, our strategy was defining the goal state to ensure that all corners have been visited.
+In addition, in getSuccessors(), we set a condition to ensure that a new position does not crash into the wall. When adding a new successor, 
+the parameters were (successor, action, cost=1). The successor would be the aforementioned tuple that contains the current state's position and the most up-to-date 
+status of the visited corners. The corresponding action and cost of 1 are then added as well. 
 
 
 QS6.1: We used a hueristic that estimated the minimum cost to visit each remaining unvisited corner in CornersProblem. The way we made it work was by finding the nearest unvisited corner from Pacman's current location
